@@ -1,0 +1,24 @@
+@PomodoroApi_HostAddress = http://localhost:5174
+
+POST {{PomodoroApi_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "admin@admin.com",
+    "password": "P@ssword123"
+}
+
+###
+
+POST {{PomodoroApi_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+    "email": "admin@admin.com",
+    "password": "P@ssword123",
+}
+
+
+###
+
+POST {{PomodoroApi_HostAddress}}/api/auth/logout
