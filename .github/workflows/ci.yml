@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 env:
-  NETCORE_VERSION: 8.0.1
+  NETCORE_VERSION: 8.0.x
 
 jobs:
   build:
