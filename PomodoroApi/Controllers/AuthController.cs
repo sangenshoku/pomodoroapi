@@ -1,5 +1,6 @@
-using Microsoft.AspNetCore.Identity.Data;
+
 using Microsoft.AspNetCore.Mvc;
+using PomodoroApi.Contracts.Auth;
 using PomodoroApi.ServiceErrors;
 using PomodoroApi.Services.Auth;
 
@@ -18,7 +19,7 @@ public class AuthController(IAuthService authService) : ApiController
             return Unauthorized(Errors.Auth.InvalidCredentials);
         }
 
-        return Ok(new { Username = request.Email });
+        return Ok(new AuthUserResponse(request.Email));
     }
 
     [HttpPost("register")]
@@ -40,5 +41,18 @@ public class AuthController(IAuthService authService) : ApiController
         await authService.LogoutAsync();
 
         return Ok();
+    }
+
+    [HttpGet("me")]
+    public async Task<IActionResult> Me()
+    {
+        var user = await authService.GetCurrentUserAsync();
+
+        if (user == null)
+        {
+            return Unauthorized();
+        }
+
+        return Ok(new AuthUserResponse(user.Email!));
     }
 }

@@ -15,10 +15,14 @@ Content-Type: application/json
 
 {
     "email": "admin@admin.com",
-    "password": "P@ssword123",
+    "password": "P@ssword123"
 }
 
 
 ###
 
 POST {{PomodoroApi_HostAddress}}/api/auth/logout
+
+###
+
+GET {{PomodoroApi_HostAddress}}/api/auth/me

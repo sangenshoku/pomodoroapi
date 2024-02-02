@@ -1,0 +1,28 @@
+name: Build and Test
+
+on:
+  push:
+    branches: ["main"]
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  NETCORE_VERSION: 8.0.1
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.NETCORE_VERSION }}
+      - name: Install
+        run: dotnet build
+      - name: Execute Unit Tests
+        run: dotnet test
