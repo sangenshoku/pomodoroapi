@@ -1,0 +1,76 @@
+services:
+  db:
+    image: mariadb
+    restart: always
+    container_name: pomodoroapi_db
+    env_file:
+      - ~/secrets/docker/pomodoro/.env
+    secrets:
+      - db_password
+    environment:
+      MARIADB_ROOT_PASSWORD_FILE: /run/secrets/db_password
+    volumes:
+      - db-data:/var/lib/mariadb
+    networks:
+      - app-network
+    healthcheck:
+      test: mariadb -u root -p$$(cat $$MARIADB_ROOT_PASSWORD_FILE) -e "SHOW DATABASES;"
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  server:
+    container_name: pomodoroapi_server
+    build:
+      context: .
+      target: final
+    ports:
+      - 5174:8080
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - ~/secrets/docker/pomodoro/.env
+    networks:
+      - app-network
+    environment:
+      ConnectionStrings__DefaultConnection: ${CONNECTION_STRING}
+      ASPNETCORE_ENVIRONMENT: Development
+      DB_MIGRATE_ON_STARTUP: true
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_USER: root
+      DB_NAME: pomodoro
+      DB_SERVER: db
+
+  web:
+    image: nginx
+    container_name: nginx
+    restart: unless-stopped
+    environment:
+      API_SERVER: server
+    ports:
+      - 8000:80
+    volumes:
+      - ~/templates/nginx:/etc/nginx/templates
+    networks:
+      - app-network
+    depends_on:
+      - server
+    healthcheck:
+      test: ["CMD", "service", "nginx", "status"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+
+volumes:
+  db-data:
+
+secrets:
+  db_connection_string:
+    file: ~/secrets/docker/pomodoro/db_connection_string.txt
+  db_password:
+    file: ~/secrets/docker/pomodoro/db_password.txt
+
+networks:
+  app-network:
+    driver: bridge

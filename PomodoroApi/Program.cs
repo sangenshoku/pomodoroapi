@@ -22,7 +22,7 @@ builder.Services.AddSwaggerGen();
         options.AddDefaultPolicy(
             policy =>
             {
-                policy.WithOrigins(["http://localhost:5173", "https://localhost:3000"])
+                policy.WithOrigins(["http://localhost:5173", "https://localhost:3000", "https://pomodoroapp-three.vercel.app"])
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials();
@@ -36,18 +36,23 @@ builder.Services.AddSwaggerGen();
 
     // db
     string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "";
+
     var conStrBuilder = new MySqlConnectionStringBuilder(connectionString)
     {
-        Password = builder.Configuration["DBPassword"],
-        UserID = builder.Configuration["DBUser"],
-        Database = builder.Configuration["DBName"]
+        Server = builder.Configuration["DB_SERVER"] ?? "127.0.0.1",
+        Password = builder.Configuration["DB_PASSWORD"],
+        UserID = builder.Configuration["DB_USER"],
+        Database = builder.Configuration["DB_NAME"]
     };
 
     connectionString = conStrBuilder.ConnectionString;
 
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
     {
-        options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+        options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
+            .LogTo(Console.WriteLine, LogLevel.Information)
+            .EnableSensitiveDataLogging()
+            .EnableDetailedErrors();
     });
 
     // services
@@ -72,5 +77,12 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+if (bool.Parse(builder.Configuration["DB_MIGRATE_ON_STARTUP"] ?? "false"))
+{
+    var scope = app.Services.CreateScope();
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    context.Database.Migrate();
+}
 
 app.Run();
