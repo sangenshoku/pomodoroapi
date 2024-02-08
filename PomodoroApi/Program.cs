@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using MySqlConnector;
 using PomodoroApi.Data;
 using PomodoroApi.Services.Auth;
+using PomodoroApi.Services.Tasks;
+using PomodoroApi.Services.Users;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,6 +60,8 @@ builder.Services.AddSwaggerGen();
     // services
     builder.Services.AddHttpContextAccessor();
     builder.Services.AddScoped<IAuthService, AuthService>();
+    builder.Services.AddScoped<IUserService, UserService>();
+    builder.Services.AddScoped<ITaskService, TaskService>();
 }
 
 var app = builder.Build();

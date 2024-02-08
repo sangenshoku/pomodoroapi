@@ -1,0 +1,44 @@
+@PomodoroApi_HostAddress = http://localhost:5174
+
+POST {{PomodoroApi_HostAddress}}/api/tasks
+Content-Type: application/json
+
+{
+    "title": "Task",
+    "estimatedPomodoros": 1
+}
+
+###
+
+GET {{PomodoroApi_HostAddress}}/api/tasks
+
+
+###
+@id=070ca461-70e3-4a9d-a648-9302b2ee471f
+GET {{PomodoroApi_HostAddress}}/api/tasks/{{id}}
+
+
+###
+PUT {{PomodoroApi_HostAddress}}/api/tasks/{{id}}
+Content-Type: application/json
+
+{
+    "Title": "Test Task Updated",
+    "completedPomodoros": 2,
+    "estimatedPomodoros": 4
+}
+
+###
+@id=070ca461-70e3-4a9d-a648-9302b2ee471f
+PUT {{PomodoroApi_HostAddress}}/api/tasks/{{id}}
+Content-Type: application/json
+
+{
+    "Title": "Test Task Updated",
+    "completedPomodoros": 2,
+    "estimatedPomodoros": 4
+}
+
+
+###
+DELETE {{PomodoroApi_HostAddress}}/api/tasks/{{id}}
