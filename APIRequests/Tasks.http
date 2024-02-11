@@ -14,18 +14,19 @@ GET {{PomodoroApi_HostAddress}}/api/tasks
 
 
 ###
-@id=070ca461-70e3-4a9d-a648-9302b2ee471f
-GET {{PomodoroApi_HostAddress}}/api/tasks/{{id}}
+@getId=0565dc89-5cea-4383-9c3e-f01aaa462148
+GET {{PomodoroApi_HostAddress}}/api/tasks/{{getId}}
 
 
 ###
-PUT {{PomodoroApi_HostAddress}}/api/tasks/{{id}}
+PUT {{PomodoroApi_HostAddress}}/api/tasks/{{getId}}
 Content-Type: application/json
 
 {
     "Title": "Test Task Updated",
     "completedPomodoros": 2,
-    "estimatedPomodoros": 4
+    "estimatedPomodoros": 4,
+    "done": true
 }
 
 ###
@@ -42,3 +43,7 @@ Content-Type: application/json
 
 ###
 DELETE {{PomodoroApi_HostAddress}}/api/tasks/{{id}}
+
+###
+DELETE {{PomodoroApi_HostAddress}}/api/tasks/{{getId}}?done=true
+

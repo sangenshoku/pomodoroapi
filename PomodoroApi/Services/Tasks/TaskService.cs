@@ -96,6 +96,21 @@ public class TaskService(ApplicationDbContext context, IUserService userService)
         };
     }
 
+    public async Task<DeletedTaskResult> DeleteFinishedTasks()
+    {
+        var user = await userService.GetCurrentUser();
+        var tasks = await context.Tasks.Where(task => task.User == user && task.Done).ToListAsync();
+
+        context.Tasks.RemoveRange(tasks);
+        await context.SaveChangesAsync();
+
+        return new DeletedTaskResult
+        {
+            Result = ResultType.Success,
+            Task = null,
+        };
+    }
+
     public async Task<DeletedTaskResult> DeleteAllTasks()
     {
         var user = await userService.GetCurrentUser();

@@ -25,7 +25,7 @@ services:
       context: .
       target: final
     ports:
-      - 5174:8080
+      - 8080
     depends_on:
       db:
         condition: service_healthy
@@ -33,6 +33,9 @@ services:
       - ~/secrets/docker/pomodoro/.env
     networks:
       - app-network
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
     environment:
       ConnectionStrings__DefaultConnection: ${CONNECTION_STRING}
       ASPNETCORE_ENVIRONMENT: Development
@@ -49,9 +52,15 @@ services:
     environment:
       API_SERVER: server
     ports:
-      - 8000:80
+      - 80:80
+      - 443:443
     volumes:
       - ~/templates/nginx:/etc/nginx/templates
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - web-root:/var/www/html
+      - dhparam:/etc/ssl/certs
+      - /etc/dhparam:/etc/dhparam
     networks:
       - app-network
     depends_on:
@@ -62,7 +71,26 @@ services:
       timeout: 30s
       retries: 5
 
+  certbot:
+    image: certbot/certbot:latest
+    depends_on:
+      web:
+        condition: service_healthy
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - web-root:/var/www/html
+    command: certonly --webroot --webroot-path=/var/www/html --email sangenshoku.1@gmail.com --agree-tos --no-eff-email --renew-by-default -d pomodoro.rjon.tech
+
 volumes:
+  certbot-etc:
+  certbot-var:
+  web-root:
+  dhparam:
+    driver: local
+    driver_opts:
+        type: none
+        o: bind 
   db-data:
 
 secrets:
@@ -73,4 +101,5 @@ secrets:
 
 networks:
   app-network:
+    name: 'pomodoro-network'
     driver: bridge

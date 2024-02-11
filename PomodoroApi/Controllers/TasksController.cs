@@ -66,9 +66,9 @@ public class TasksController(ITaskService taskService) : ApiController
     }
 
     [HttpDelete]
-    public async Task<IActionResult> DeleteAll()
+    public async Task<IActionResult> DeleteAll([FromQuery] bool done = false)
     {
-        var result = await taskService.DeleteAllTasks();
+        var result = done ? await taskService.DeleteFinishedTasks() : await taskService.DeleteAllTasks();
 
         if (result.Result == Services.ResultType.Failure)
         {

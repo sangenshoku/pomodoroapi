@@ -7,5 +7,6 @@ public interface ITaskService
     Task<CreatedTaskResult> CreateTask(Models.Task task);
     Task<UpdatedTaskResult> UpdateTask(Models.Task task, Guid id);
     Task<DeletedTaskResult> DeleteTask(Guid id);
+    Task<DeletedTaskResult> DeleteFinishedTasks();
     Task<DeletedTaskResult> DeleteAllTasks();
 }
