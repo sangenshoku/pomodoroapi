@@ -37,7 +37,7 @@ services:
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
     environment:
-      ConnectionStrings__DefaultConnection: ${CONNECTION_STRING}
+      ConnectionStrings__DefaultConnection: ${DEFAULT_CONNECTION}
       ASPNETCORE_ENVIRONMENT: Development
       DB_MIGRATE_ON_STARTUP: true
       DB_PASSWORD: ${DB_PASSWORD}
