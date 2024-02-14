@@ -23,7 +23,9 @@ public class Task
         ushort estimatedPomodoros,
         bool done,
         Guid? id = null,
-        ApplicationUser? user = null)
+        ApplicationUser? user = null,
+        DateTime? createdAt = null,
+        DateTime? updatedAt = null)
     {
         return new Task
         {
@@ -32,7 +34,7 @@ public class Task
             CompletedPomodoros = completedPomodoros,
             EstimatedPomodoros = estimatedPomodoros,
             Done = done,
-            User = user
+            User = user,
         };
     }
 
@@ -42,9 +44,7 @@ public class Task
             request.Title,
             0,
             request.EstimatedPomodoros,
-            false,
-            null,
-            null
+            false
         );
     }
 
@@ -54,9 +54,7 @@ public class Task
             request.Title,
             request.CompletedPomodoros,
             request.EstimatedPomodoros,
-            request.Done,
-            null,
-            null
+            request.Done
         );
     }
 

@@ -9,8 +9,13 @@ using PomodoroApi.Services.Users;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.Name = "PomodoroApi";
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+});
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -51,10 +56,14 @@ builder.Services.AddSwaggerGen();
 
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
     {
-        options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
-            .LogTo(Console.WriteLine, LogLevel.Information)
+        var sqlOptionBuilder = options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+
+        if (builder.Environment.IsDevelopment())
+        {
+            sqlOptionBuilder.LogTo(Console.WriteLine, LogLevel.Information)
             .EnableSensitiveDataLogging()
             .EnableDetailedErrors();
+        }
     });
 
     // services

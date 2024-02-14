@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
+using PomodoroApi.Contracts.Auth;
 using PomodoroApi.Data;
 
 namespace PomodoroApi.Services.Auth;
@@ -37,8 +38,13 @@ public class AuthService(
         await signInManager.SignOutAsync();
     }
 
-    public async Task<IdentityResult> RegisterAsync(string email, string password)
+    public async Task<IdentityResult> RegisterAsync(RegisterRequest request)
     {
-        return await userManager.CreateAsync(new ApplicationUser { UserName = email, Email = email }, password);
+        if (request.Password != request.ConfirmPassword)
+        {
+            return IdentityResult.Failed(new IdentityError { Description = "Passwords do not match" });
+        }
+
+        return await userManager.CreateAsync(new ApplicationUser { UserName = request.Email, Email = request.Email }, request.Password);
     }
 }

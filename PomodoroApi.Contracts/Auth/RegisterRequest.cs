@@ -1,4 +1,5 @@
 namespace PomodoroApi.Contracts.Auth;
 public record RegisterRequest(
     string Email,
-    string Password);
+    string Password,
+    string ConfirmPassword);

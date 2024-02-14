@@ -24,7 +24,7 @@ services:
     build:
       context: .
       target: final
-    ports:
+    expose:
       - 8080
     depends_on:
       db:
@@ -38,7 +38,7 @@ services:
       - certbot-var:/var/lib/letsencrypt
     environment:
       ConnectionStrings__DefaultConnection: ${DEFAULT_CONNECTION}
-      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
       DB_MIGRATE_ON_STARTUP: true
       DB_PASSWORD: ${DB_PASSWORD}
       DB_USER: root
@@ -89,8 +89,8 @@ volumes:
   dhparam:
     driver: local
     driver_opts:
-        type: none
-        o: bind 
+      type: none
+      o: bind
   db-data:
 
 secrets:
@@ -101,5 +101,5 @@ secrets:
 
 networks:
   app-network:
-    name: 'pomodoro-network'
+    name: "pomodoro-network"
     driver: bridge

@@ -25,7 +25,7 @@ public class AuthController(IAuthService authService) : ApiController
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] PomodoroApi.Contracts.Auth.RegisterRequest request)
     {
-        var result = await authService.RegisterAsync(request.Email, request.Password);
+        var result = await authService.RegisterAsync(request);
 
         if (result.Errors.Any())
         {

@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using PomodoroApi.Contracts.Auth;
 using PomodoroApi.Controllers;
+using PomodoroApi.Contracts.Auth;
 using PomodoroApi.Services.Auth;
 
-namespace PomodoroApi.Tests;
+namespace PomodoroApi.Tests.Controllers;
 
 public class AuthControllerTest
 {
@@ -35,9 +35,9 @@ public class AuthControllerTest
         // Arrange
         var authService = new Mock<IAuthService>();
         var controller = new AuthController(authService.Object);
-        var request = new RegisterRequest("test@test.com", "P@ssword123");
+        var request = new RegisterRequest("test@test.com", "P@ssword123", "P@ssword123");
 
-        authService.Setup(x => x.RegisterAsync(request.Email, request.Password))
+        authService.Setup(x => x.RegisterAsync(request))
             .ReturnsAsync(Microsoft.AspNetCore.Identity.IdentityResult.Success);
 
         // Act

@@ -34,6 +34,7 @@ public class TasksController(ITaskService taskService) : ApiController
     public async Task<IActionResult> Create([FromBody] CreateTaskRequest request)
     {
         var result = await taskService.CreateTask(Models.Task.From(request));
+
         var task = result.Task;
 
         return CreatedAtGetTask(task);

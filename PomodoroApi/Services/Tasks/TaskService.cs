@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using PomodoroApi.Contracts.Tasks;
 using PomodoroApi.Data;
 using PomodoroApi.Services.Users;
 
@@ -40,6 +39,9 @@ public class TaskService(ApplicationDbContext context, IUserService userService)
             task.User = user;
         }
 
+        task.CreatedAt = DateTime.Now;
+        task.UpdatedAt = DateTime.Now;
+
         await context.Tasks.AddAsync(task);
         await context.SaveChangesAsync();
 
@@ -67,6 +69,7 @@ public class TaskService(ApplicationDbContext context, IUserService userService)
         storedTask.CompletedPomodoros = task.CompletedPomodoros;
         storedTask.EstimatedPomodoros = task.EstimatedPomodoros;
         storedTask.Done = task.Done;
+        storedTask.UpdatedAt = DateTime.Now;
 
         await context.SaveChangesAsync();
 
